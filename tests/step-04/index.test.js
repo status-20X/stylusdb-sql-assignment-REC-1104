@@ -17,6 +17,8 @@ test('Parse SQL Query', () => {
         fields: ['id', 'name'],
         table: 'student',
         "joinCondition": null,
+        "groupByFields": null,
+       "hasAggregateWithoutGroupBy": false,
         "joinTable": null,
         "joinType": null,
         whereClauses: []
@@ -31,4 +33,4 @@ test('Execute SQL Query', async () => {
     expect(result[0]).toHaveProperty('name');
     expect(result[0]).not.toHaveProperty('age');
     expect(result[0]).toEqual({ id: '1', name: 'John' });
-}); 
+});
