@@ -1,6 +1,6 @@
-const readCSV = require('../../src/csvReader');
-const { parseQuery } = require('../../src/queryParser');
-const executeSELECTQuery = require('../../src/index');
+const {readCSV} = require('../../src/csvReader');
+const {parseSelectQuery, parseJoinClause} = require('../../src/queryParser');
+const {executeSELECTQuery} = require('../../src/index');
 
 test('Read CSV File', async () => {
     const data = await readCSV('./student.csv');
@@ -12,12 +12,13 @@ test('Read CSV File', async () => {
 
 test('Parse SQL Query', () => {
     const query = 'SELECT id, name FROM student';
-    const parsed = parseQuery(query);
+    const parsed = parseSelectQuery(query);
     expect(parsed).toEqual({
         fields: ['id', 'name'],
         table: 'student',
         "joinCondition": null,
         "joinTable": null,
+        "isDistinct": false,
         "limit": null,
         "joinType": null,
         "groupByFields": null,
@@ -40,13 +41,14 @@ test('Execute SQL Query', async () => {
 
 test('Parse SQL Query with Multiple WHERE Clauses', () => {
     const query = 'SELECT id, name FROM student WHERE age = 30 AND name = John';
-    const parsed = parseQuery(query);
+    const parsed = parseSelectQuery(query);
     expect(parsed).toEqual({
         fields: ['id', 'name'],
         table: 'student',
         "joinCondition": null,
         "joinTable": null,
         "limit": null,
+        "isDistinct": false,
         "joinType": null,
         "groupByFields": null,
 orderByFields: null,
@@ -68,4 +70,4 @@ test('Execute SQL Query with Multiple WHERE Clause', async () => {
     const result = await executeSELECTQuery(query);
     expect(result.length).toBe(1);
     expect(result[0]).toEqual({ id: '1', name: 'John' });
-});
+}); 
